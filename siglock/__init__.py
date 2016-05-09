@@ -1,0 +1,1 @@
+from .decorators import single_task # noqa

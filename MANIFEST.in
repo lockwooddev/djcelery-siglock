@@ -1,0 +1,7 @@
+include setup.py README.rst Makefile MANIFEST.in
+include LICENSE.txt
+include Makefile
+include pytest.ini
+recursive-exclude * *.pyc
+recursive-exclude * *.pyo
+recursive-exclude * *.DS_Store

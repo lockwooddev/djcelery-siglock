@@ -1,4 +1,5 @@
 import mock
+import hashlib
 from django.core.cache import cache
 
 from siglock.decorators import single_task
@@ -153,3 +154,39 @@ def test_run_while_locked(cache_delete_mock):
     cache.set('lock_fn', 'true', 60)
     single_task(60)(fn)()
     assert not cache_delete_mock.called
+
+
+@mock.patch('django.core.cache.cache.add')
+def test_single_task_digest_key_short(add_mock):
+    """ Tests generated short cache key is md5 hashed """
+
+    def fn(arg):
+        pass
+
+    # decorate & call
+    single_task(60, digest=True)(fn)(1)
+
+    m = hashlib.md5()
+    m.update(b'lock_fn_arg_1')
+    _hash = m.hexdigest()
+    assert add_mock.call_args[0] == (_hash, 'true', 60)
+
+
+@mock.patch('django.core.cache.cache.add')
+def test_single_task_digest_key_long_arguments(add_mock):
+    """ Tests generated long cache key is md5 hashed """
+
+    def fn(lst):
+        pass
+
+    lst = [x for x in range(0, 300)]
+
+    # decorate & call
+    single_task(60, digest=True)(fn)(lst)
+
+    expected_key = 'lock_fn_lst_{}'.format(str(lst).replace(' ', ''))
+
+    m = hashlib.md5()
+    m.update(expected_key.encode())
+    _hash = m.hexdigest()
+    assert add_mock.call_args[0] == (_hash, 'true', 60)

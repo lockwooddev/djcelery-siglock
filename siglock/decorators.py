@@ -1,4 +1,5 @@
 import copy
+import hashlib
 import logging
 from collections import OrderedDict
 from functools import wraps
@@ -60,7 +61,7 @@ def get_signature(fn, args, kwargs):
     return lock_id
 
 
-def single_task(timeout, ignore_args=False):
+def single_task(timeout, ignore_args=False, digest=False):
     """
     Decorator locking a celery task that should only run once.
 
@@ -80,6 +81,11 @@ def single_task(timeout, ignore_args=False):
                 lock_id = get_signature(fn, args, kwargs)
             else:
                 lock_id = 'lock_{0}'.format(fn.__name__)
+
+            if digest:
+                hasher = hashlib.md5()
+                hasher.update(lock_id.encode())
+                lock_id = hasher.hexdigest()
 
             # adds key to cache, but not overriding
             acquire_lock = lambda: cache.add(lock_id, 'true', timeout)

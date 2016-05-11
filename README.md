@@ -26,7 +26,7 @@ from siglock import single_task
 @single_task(60 * 60)
 def task1(obj_pk):
     pass
-    
+
 task1.delay(1)
 ```
 
@@ -38,7 +38,7 @@ The cache key generated will be `lock_task1_obj_pk_1`.
 @single_task(60 * 60)
 def task2():
     pass
-    
+
 task2.delay()
 ```
 The cache key generated will be `lock_task2`.
@@ -49,7 +49,7 @@ The cache key generated will be `lock_task2`.
 @single_task(60 * 60)
 def task3(*args, **kwargs):
     pass
-    
+
 task3.delay(1, a=2)
 ```
 The cache key generated will be `lock_task3_1_a_2`.
@@ -68,7 +68,23 @@ Here is an example:
 @single_task(60 * 60, ignore_args=True)
 def task4(lst):
     pass
-    
+
 task4.delay([1,2,3])
 ```
 The cache key generated will be `lock_task4`.
+
+
+## Hash cache key
+
+If your cache key gets too long, you can also md5 hash your cache key.
+
+```python
+@task
+@single_task(60 * 60, digest=True)
+def task4(arg):
+    pass
+
+task4.delay(1)
+```
+
+The cache key generated will be a md5 hexdigest.

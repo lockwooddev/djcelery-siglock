@@ -11,6 +11,13 @@ from the official Celery documentation.
 What's different in this project, is the unique signature it tries to create based on the arguments used in executing the task function.
 The signature is used as a cache key for locking the task.
 
+
+## Installing & running tests
+
+    make devinstall
+    make tests
+
+
 ## Usage examples
 
 ### Importing

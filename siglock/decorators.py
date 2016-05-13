@@ -98,6 +98,9 @@ def single_task(timeout, ignore_args=False, digest=False):
                 finally:
                     release_lock()
                     logger.debug('Task reset lock: {0}'.format(lock_id))
+            else:
+                logger.debug(
+                    'Cannot acquire lock on: {0}. The task might locked'.format(lock_id))
 
         return wrapper
     return _dec

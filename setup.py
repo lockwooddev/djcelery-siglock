@@ -23,7 +23,6 @@ test_requirements = [
     'pyflakes==1.1.0',
     'pytest==2.9.1',
     'pytest-django==2.9.1',
-    'pytest-cache==1.0',
     'pytest-flakes==1.0.1',
     'pytest-pep8==1.0.6',
     'mock==1.0.1',
@@ -37,7 +36,7 @@ setup(
         'Djcelery-siglock is Celery task decorator to ensure'
         'that a task is onlyexecuted one at a time.'
     ),
-    long_description=read('README.rst'),
+    long_description=read('README.md'),
     author='Carlo Smouter',
     author_email='lockwooddev@gmail.com',
     url='https://github.com/lockwooddev/djcelery-siglock',
